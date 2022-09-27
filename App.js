@@ -1,20 +1,29 @@
+import React from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { Text, View, SafeAreaView } from 'react-native';
+import styles from './App.styles';
+import OptionContainer from './src/components/OptionContainer';
 
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
+const App = () => (
+  <SafeAreaView style={styles.root}>
+    <Text style={styles.title}>Which of these is a "glass"?</Text>
+
+    <View style={styles.optionsContainer}>
+      <OptionContainer
+        image={
+          'https://fsmd-assets.s3.eu-west-1.amazonaws.com/duolingo/images/cup.png'
+        }
+        text={'cup'}
+      />
+      <OptionContainer
+        image={
+          'https://fsmd-assets.s3.eu-west-1.amazonaws.com/duolingo/images/glass.png'
+        }
+        text={'glass'}
+      />
     </View>
-  );
-}
+    <StatusBar style='auto' />
+  </SafeAreaView>
+);
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default App;
