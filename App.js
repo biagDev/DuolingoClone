@@ -1,22 +1,38 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { Text, View, SafeAreaView } from 'react-native';
+import { Text, View, SafeAreaView, Alert } from 'react-native';
 import styles from './App.styles';
 import OptionContainer from './src/components/OptionContainer';
-// import imageMultipleChoiceQuestions from './assets/data/imageMultipleChoiceQuestions';
-import question from './assets/data/oneQuestionWithOption';
+import questions from './assets/data/imageMultipleChoiceQuestions';
 import Button from './src/components/Button';
 
 const App = () => {
   const [selected, setSelected] = useState(null);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [currentQuestion, setCurrentQuestion] = useState(questions[0]);
+
+  useEffect(() => {
+    if (currentQuestionIndex >= questions.length) {
+      Alert.alert('You Won!');
+      setCurrentQuestionIndex(0);
+    } else {
+      setCurrentQuestion(questions[currentQuestionIndex]);
+    }
+  }, [currentQuestionIndex]);
+
   const onButtonPress = () => {
-    console.warn('You pressed me button');
+    if (selected.correct) {
+      setCurrentQuestionIndex(currentQuestionIndex + 1);
+      setSelected(null);
+    } else {
+      Alert.alert('Wrong');
+    }
   };
   return (
     <SafeAreaView style={styles.root}>
-      <Text style={styles.title}>{question.question}</Text>
+      <Text style={styles.title}>{currentQuestion.question}</Text>
       <View style={styles.optionsContainer}>
-        {question.options.map(option => (
+        {currentQuestion?.options.map(option => (
           <OptionContainer
             key={option.id}
             image={option.image}
