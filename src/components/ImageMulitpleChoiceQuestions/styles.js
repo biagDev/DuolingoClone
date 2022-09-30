@@ -5,7 +5,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     alignSelf: 'stretch',
-    marginHorizontal: 10,
+    // marginHorizontal: 10,
   },
   optionsContainer: {
     width: '100%',
