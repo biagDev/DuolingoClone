@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { SafeAreaView, Alert } from 'react-native';
+import { SafeAreaView, Alert, ActivityIndicator } from 'react-native';
 import styles from './App.styles';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 import ImageMulitpleChoiceQuestions from './src/components/ImageMulitpleChoiceQuestions/ImageMulitpleChoiceQuestions';
 import OpenEndedQuestion from './src/components/OpenEndedQuestion/OpenEndedQuestion';
 import Header from './src/components/Header';
@@ -11,6 +13,7 @@ const App = () => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [currentQuestion, setCurrentQuestion] = useState(questions[0]);
   const [lives, setLives] = useState(5);
+  const [hasLoaded, setHasLoaded] = useState(false);
 
   useEffect(() => {
     if (currentQuestionIndex >= questions.length) {
@@ -20,6 +23,16 @@ const App = () => {
       setCurrentQuestion(questions[currentQuestionIndex]);
     }
   }, [currentQuestionIndex]);
+
+  useEffect(() => {
+    loadData();
+  }, []);
+
+  useEffect(() => {
+    if (hasLoaded) {
+      saveData();
+    }
+  }, [lives, currentQuestionIndex, hasLoaded]);
 
   const onCorrect = () => {
     setCurrentQuestionIndex(currentQuestionIndex + 1);
@@ -43,6 +56,33 @@ const App = () => {
       setLives(lives - 1);
     }
   };
+
+  const saveData = async () => {
+    await AsyncStorage.setItem('lives', lives.toString());
+    await AsyncStorage.setItem(
+      'currentQuestionIndex',
+      currentQuestionIndex.toString()
+    );
+  };
+  const loadData = async () => {
+    const loadedLives = await AsyncStorage.getItem('lives');
+    if (loadedLives) {
+      setLives(parseInt(loadedLives));
+    }
+
+    const currentQuestionIndex = await AsyncStorage.getItem(
+      'currentQuestionIndex'
+    );
+    if (currentQuestionIndex) {
+      setCurrentQuestionIndex(parseInt(currentQuestionIndex));
+    }
+
+    setHasLoaded(true);
+  };
+
+  if (!hasLoaded) {
+    return <ActivityIndicator />;
+  }
 
   return (
     <SafeAreaView style={styles.root}>
