@@ -9,7 +9,7 @@ import styles from './styles';
 const OpenEndedQuestion = ({ currentQuestion, onCorrect, onWrong }) => {
   const [input, setInput] = useState('');
   const onButtonPress = () => {
-    if (currentQuestion.answer.toUpperCase().trim === input.toUpperCase()) {
+    if (currentQuestion.answer.toUpperCase() === input.toUpperCase().trim()) {
       onCorrect();
     } else {
       onWrong();
@@ -34,7 +34,7 @@ const OpenEndedQuestion = ({ currentQuestion, onCorrect, onWrong }) => {
         textAlignVertical='top'
         multiline={true}
       />
-      <Button text='Check' onPress={onButtonPress} disabled={false} />
+      <Button text='Check' onPress={onButtonPress} disabled={!input} />
     </>
   );
 };
